@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
@@ -28,6 +29,10 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
+    public function  __construct()
+    {
+        $this->roles = array('ROLE_ADMIN');
+    }
 
     /**
      * @var string The hashed password
@@ -60,7 +65,7 @@ class Utilisateur implements UserInterface
      */
     private $partenaire;
 
-    public function __construct()
+    public function ____construct()
     {
         $this->partenaires = new ArrayCollection();
     }
@@ -139,8 +144,7 @@ class Utilisateur implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+       
     }
 
     public function getNomUtilisateur(): ?string

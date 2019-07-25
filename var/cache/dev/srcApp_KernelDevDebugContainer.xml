@@ -21,6 +21,7 @@
       <parameter key="FOSRestBundle">FOS\RestBundle\FOSRestBundle</parameter>
       <parameter key="WebServerBundle">Symfony\Bundle\WebServerBundle\WebServerBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
+      <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -71,6 +72,10 @@
         <parameter key="path">/home/kimora/RAFTAF/vendor/sensio/framework-extra-bundle</parameter>
         <parameter key="namespace">Sensio\Bundle\FrameworkExtraBundle</parameter>
       </parameter>
+      <parameter key="WebProfilerBundle" type="collection">
+        <parameter key="path">/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle</parameter>
+        <parameter key="namespace">Symfony\Bundle\WebProfilerBundle</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">srcApp_KernelDevDebugContainer</parameter>
@@ -100,7 +105,9 @@
     <parameter key="validator.mapping.cache.prefix"></parameter>
     <parameter key="validator.mapping.cache.file">/home/kimora/RAFTAF/var/cache/dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
-    <parameter key="data_collector.templates" type="collection"/>
+    <parameter key="profiler_listener.only_exceptions">false</parameter>
+    <parameter key="profiler_listener.only_master_requests">false</parameter>
+    <parameter key="profiler.storage.dsn">file:/home/kimora/RAFTAF/var/cache/dev/profiler</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
     <parameter key="debug.container.dump">/home/kimora/RAFTAF/var/cache/dev/srcApp_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
@@ -362,6 +369,74 @@
     <parameter key="doctrine_migrations.name">Application Migrations</parameter>
     <parameter key="doctrine_migrations.custom_template">null</parameter>
     <parameter key="doctrine_migrations.organize_migrations">false</parameter>
+    <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
+    <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
+    <parameter key="data_collector.templates" type="collection">
+      <parameter key="data_collector.request" type="collection">
+        <parameter>request</parameter>
+        <parameter>@WebProfiler/Collector/request.html.twig</parameter>
+      </parameter>
+      <parameter key="api_platform.data_collector.request" type="collection">
+        <parameter>api_platform.data_collector.request</parameter>
+        <parameter>@ApiPlatform/DataCollector/request.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.time" type="collection">
+        <parameter>time</parameter>
+        <parameter>@WebProfiler/Collector/time.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.memory" type="collection">
+        <parameter>memory</parameter>
+        <parameter>@WebProfiler/Collector/memory.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.validator" type="collection">
+        <parameter>validator</parameter>
+        <parameter>@WebProfiler/Collector/validator.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.ajax" type="collection">
+        <parameter>ajax</parameter>
+        <parameter>@WebProfiler/Collector/ajax.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.form" type="collection">
+        <parameter>form</parameter>
+        <parameter>@WebProfiler/Collector/form.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.exception" type="collection">
+        <parameter>exception</parameter>
+        <parameter>@WebProfiler/Collector/exception.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.logger" type="collection">
+        <parameter>logger</parameter>
+        <parameter>@WebProfiler/Collector/logger.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.events" type="collection">
+        <parameter>events</parameter>
+        <parameter>@WebProfiler/Collector/events.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.router" type="collection">
+        <parameter>router</parameter>
+        <parameter>@WebProfiler/Collector/router.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.cache" type="collection">
+        <parameter>cache</parameter>
+        <parameter>@WebProfiler/Collector/cache.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.security" type="collection">
+        <parameter>security</parameter>
+        <parameter>@Security/Collector/security.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.twig" type="collection">
+        <parameter>twig</parameter>
+        <parameter>@WebProfiler/Collector/twig.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.doctrine" type="collection">
+        <parameter>db</parameter>
+        <parameter>@Doctrine/Collector/db.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.config" type="collection">
+        <parameter>config</parameter>
+        <parameter>@WebProfiler/Collector/config.html.twig</parameter>
+      </parameter>
+    </parameter>
     <parameter key="console.command.ids" type="collection">
       <parameter>console.command.public_alias.doctrine_cache.contains_command</parameter>
       <parameter>console.command.public_alias.doctrine_cache.delete_command</parameter>
@@ -382,6 +457,13 @@
   </parameters>
   <services>
     <service id="service_container" class="Symfony\Component\DependencyInjection\ContainerInterface" public="true" synthetic="true"/>
+    <service id="App\Controller\SecuriteController" class="App\Controller\SecuriteController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.CDOTD6..App\Controller\SecuriteController"/>
+      </call>
+    </service>
     <service id="App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -474,6 +556,8 @@
     <service id="services_resetter" class="Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter" public="true">
       <argument type="iterator">
         <argument key="form.choice_list_factory.cached" type="service" id="form.choice_list_factory.cached" on-invalid="ignore_uninitialized"/>
+        <argument key="profiler" type="service" id="profiler" on-invalid="ignore_uninitialized"/>
+        <argument key="debug.validator" type="service" id="debug.validator" on-invalid="ignore_uninitialized"/>
         <argument key="debug.stopwatch" type="service" id="debug.stopwatch" on-invalid="ignore_uninitialized"/>
         <argument key="security.token_storage" type="service" id="security.token_storage" on-invalid="ignore_uninitialized"/>
         <argument key="form.type.entity" type="service" id="form.type.entity" on-invalid="ignore_uninitialized"/>
@@ -481,6 +565,8 @@
       </argument>
       <argument type="collection">
         <argument key="form.choice_list_factory.cached">reset</argument>
+        <argument key="profiler">reset</argument>
+        <argument key="debug.validator">reset</argument>
         <argument key="debug.stopwatch">reset</argument>
         <argument key="security.token_storage">setToken</argument>
         <argument key="form.type.entity">reset</argument>
@@ -657,6 +743,7 @@
         <argument>Symfony\Component\Form\Extension\Validator\Type\RepeatedTypeValidatorExtension</argument>
         <argument>Symfony\Component\Form\Extension\Validator\Type\SubmitTypeValidatorExtension</argument>
         <argument>Symfony\Component\Form\Extension\Csrf\Type\FormTypeCsrfExtension</argument>
+        <argument>Symfony\Component\Form\Extension\DataCollector\Type\DataCollectorTypeExtension</argument>
       </argument>
       <argument type="collection">
         <argument>Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser</argument>
@@ -667,15 +754,9 @@
         <argument>debug:form</argument>
       </call>
     </service>
-    <service id="cache.app" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="true">
+    <service id="cache.app" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="true">
       <tag name="cache.pool"/>
-      <argument>IuHp1D8MOK</argument>
-      <argument>0</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
+      <argument type="service" id="cache.app.recorder_inner"/>
     </service>
     <service id="cache.app.simple" class="Symfony\Component\Cache\Psr16Cache" public="false">
       <argument type="service" id="cache.app"/>
@@ -684,60 +765,29 @@
     <service id="cache.app.taggable" class="Symfony\Component\Cache\Adapter\TagAwareAdapter" public="false">
       <argument type="service" id="cache.app"/>
     </service>
-    <service id="cache.system" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="true">
+    <service id="cache.system" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="true">
       <tag name="cache.pool"/>
-      <argument>bQIS0kdOeD</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.system.recorder_inner"/>
     </service>
-    <service id="cache.validator" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="cache.validator" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>Rf12DJb4xm</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.validator.recorder_inner"/>
     </service>
-    <service id="cache.serializer" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="cache.serializer" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>b9vC5VBM64</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.serializer.recorder_inner"/>
     </service>
-    <service id="cache.annotations" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="cache.annotations" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>M5SAYQIQjf</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.annotations.recorder_inner"/>
     </service>
-    <service id="cache.property_info" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="cache.property_info" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>RJunBqHb31</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.property_info.recorder_inner"/>
     </service>
-    <service id="cache.messenger.restart_workers_signal" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="false">
+    <service id="cache.messenger.restart_workers_signal" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>ptb45DC6EO</argument>
-      <argument>0</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
+      <argument type="service" id="cache.messenger.restart_workers_signal.recorder_inner"/>
     </service>
     <service id="cache.adapter.system" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false" abstract="true">
       <tag name="cache.pool" clearer="cache.system_clearer"/>
@@ -930,7 +980,10 @@
     <service id="twig.extension.security_csrf" class="Symfony\Bridge\Twig\Extension\CsrfExtension" public="false">
       <tag name="twig.extension"/>
     </service>
-    <service id="form.resolved_type_factory" class="Symfony\Component\Form\ResolvedFormTypeFactory" public="false"/>
+    <service id="form.resolved_type_factory" class="Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeFactoryDataCollectorProxy" public="false">
+      <argument type="service" id=".1_ResolvedFormTypeFactory~NZ0_bpV"/>
+      <argument type="service" id="data_collector.form"/>
+    </service>
     <service id="form.registry" class="Symfony\Component\Form\FormRegistry" public="false">
       <argument type="collection">
         <argument type="service" id="form.extension"/>
@@ -948,6 +1001,7 @@
           <argument type="service" id="form.type_extension.form.http_foundation"/>
           <argument type="service" id="form.type_extension.form.validator"/>
           <argument type="service" id="form.type_extension.csrf"/>
+          <argument type="service" id="form.type_extension.form.data_collector"/>
         </argument>
         <argument key="Symfony\Component\Form\Extension\Core\Type\RepeatedType" type="iterator">
           <argument type="service" id="form.type_extension.repeated.validator"/>
@@ -963,7 +1017,7 @@
     </service>
     <service id="form.type_guesser.validator" class="Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser" public="false">
       <tag name="form.type_guesser"/>
-      <argument type="service" id="validator"/>
+      <argument type="service" id="debug.validator"/>
     </service>
     <service id="form.choice_list_factory.default" class="Symfony\Component\Form\ChoiceList\Factory\DefaultChoiceListFactory" public="false"/>
     <service id="form.choice_list_factory.property_access" class="Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator" public="false">
@@ -1002,7 +1056,7 @@
     </service>
     <service id="form.type_extension.form.validator" class="Symfony\Component\Form\Extension\Validator\Type\FormTypeValidatorExtension" public="false">
       <tag name="form.type_extension" extended_type="Symfony\Component\Form\Extension\Core\Type\FormType" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType"/>
-      <argument type="service" id="validator"/>
+      <argument type="service" id="debug.validator"/>
     </service>
     <service id="form.type_extension.repeated.validator" class="Symfony\Component\Form\Extension\Validator\Type\RepeatedTypeValidatorExtension" public="false">
       <tag name="form.type_extension"/>
@@ -1059,9 +1113,6 @@
       <argument type="service" id="cache.validator"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
-    <service id="validator" class="Symfony\Component\Validator\Validator\ValidatorInterface" public="true">
-      <factory service="validator.builder" method="getValidator"/>
-    </service>
     <service id="validator.builder" class="Symfony\Component\Validator\ValidatorBuilderInterface" public="false">
       <call method="setConstraintValidatorFactory">
         <argument type="service" id="validator.validator_factory"/>
@@ -1115,6 +1166,189 @@
       <argument>true</argument>
       <argument>null</argument>
     </service>
+    <service id="profiler" class="Symfony\Component\HttpKernel\Profiler\Profiler" public="true">
+      <tag name="monolog.logger" channel="profiler"/>
+      <tag name="kernel.reset" method="reset"/>
+      <argument type="service" id="profiler.storage"/>
+      <argument type="service" id="logger" on-invalid="null"/>
+      <argument>true</argument>
+      <call method="add">
+        <argument type="service" id="data_collector.request"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="api_platform.data_collector.request"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.time"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.memory"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.validator"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.ajax"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.form"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.exception"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.logger"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.events"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.router"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.cache"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.security"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.twig"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.doctrine"/>
+      </call>
+      <call method="add">
+        <argument type="service" id="data_collector.config"/>
+      </call>
+    </service>
+    <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage" public="false">
+      <argument>file:/home/kimora/RAFTAF/var/cache/dev/profiler</argument>
+    </service>
+    <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener" public="false">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="profiler"/>
+      <argument type="service" id="request_stack"/>
+      <argument>null</argument>
+      <argument>false</argument>
+      <argument>false</argument>
+    </service>
+    <service id="data_collector.config" class="Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/config.html.twig" id="config" priority="-255"/>
+      <call method="setKernel">
+        <argument type="service" id="kernel" on-invalid="ignore"/>
+      </call>
+    </service>
+    <service id="data_collector.request" class="Symfony\Component\HttpKernel\DataCollector\RequestDataCollector" public="false">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="data_collector" template="@WebProfiler/Collector/request.html.twig" id="request" priority="335"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id="data_collector.ajax" class="Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/ajax.html.twig" id="ajax" priority="315"/>
+    </service>
+    <service id="data_collector.exception" class="Symfony\Component\HttpKernel\DataCollector\ExceptionDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/exception.html.twig" id="exception" priority="305"/>
+    </service>
+    <service id="data_collector.events" class="Symfony\Component\HttpKernel\DataCollector\EventDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/events.html.twig" id="events" priority="290"/>
+      <argument type="service" id="debug.event_dispatcher" on-invalid="ignore"/>
+      <argument type="service" id="request_stack" on-invalid="ignore"/>
+    </service>
+    <service id="data_collector.logger" class="Symfony\Component\HttpKernel\DataCollector\LoggerDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
+      <tag name="monolog.logger" channel="profiler"/>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/srcApp_KernelDevDebugContainer</argument>
+      <argument type="service" id="request_stack" on-invalid="ignore"/>
+    </service>
+    <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/time.html.twig" id="time" priority="330"/>
+      <argument type="service" id="kernel" on-invalid="ignore"/>
+      <argument type="service" id="debug.stopwatch" on-invalid="ignore"/>
+    </service>
+    <service id="data_collector.memory" class="Symfony\Component\HttpKernel\DataCollector\MemoryDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/memory.html.twig" id="memory" priority="325"/>
+    </service>
+    <service id="data_collector.router" class="Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector" public="false">
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+      <tag name="data_collector" template="@WebProfiler/Collector/router.html.twig" id="router" priority="285"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id="data_collector.cache" class="Symfony\Component\Cache\DataCollector\CacheDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/cache.html.twig" id="cache" priority="275"/>
+      <call method="addInstance">
+        <argument>cache.app</argument>
+        <argument type="service" id="cache.app"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.system</argument>
+        <argument type="service" id="cache.system"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.validator</argument>
+        <argument type="service" id="cache.validator"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.serializer</argument>
+        <argument type="service" id="cache.serializer"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.annotations</argument>
+        <argument type="service" id="cache.annotations"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.property_info</argument>
+        <argument type="service" id="cache.property_info"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.messenger.restart_workers_signal</argument>
+        <argument type="service" id="cache.messenger.restart_workers_signal"/>
+      </call>
+      <call method="addInstance">
+        <argument>cache.security_expression_language</argument>
+        <argument type="service" id="cache.security_expression_language"/>
+      </call>
+      <call method="addInstance">
+        <argument>api_platform.cache.route_name_resolver</argument>
+        <argument type="service" id="api_platform.cache.route_name_resolver"/>
+      </call>
+      <call method="addInstance">
+        <argument>api_platform.cache.identifiers_extractor</argument>
+        <argument type="service" id="api_platform.cache.identifiers_extractor"/>
+      </call>
+      <call method="addInstance">
+        <argument>api_platform.cache.subresource_operation_factory</argument>
+        <argument type="service" id="api_platform.cache.subresource_operation_factory"/>
+      </call>
+      <call method="addInstance">
+        <argument>api_platform.cache.metadata.resource</argument>
+        <argument type="service" id="api_platform.cache.metadata.resource"/>
+      </call>
+      <call method="addInstance">
+        <argument>api_platform.cache.metadata.property</argument>
+        <argument type="service" id="api_platform.cache.metadata.property"/>
+      </call>
+    </service>
+    <service id=".1_ResolvedFormTypeFactory~NZ0_bpV" class="Symfony\Component\Form\ResolvedFormTypeFactory" public="false"/>
+    <service id="form.type_extension.form.data_collector" class="Symfony\Component\Form\Extension\DataCollector\Type\DataCollectorTypeExtension" public="false">
+      <tag name="form.type_extension"/>
+      <argument type="service" id="data_collector.form"/>
+    </service>
+    <service id="data_collector.form.extractor" class="Symfony\Component\Form\Extension\DataCollector\FormDataExtractor" public="false"/>
+    <service id="data_collector.form" class="Symfony\Component\Form\Extension\DataCollector\FormDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/form.html.twig" id="form" priority="310"/>
+      <argument type="service" id="data_collector.form.extractor"/>
+    </service>
+    <service id="debug.validator" class="Symfony\Component\Validator\Validator\TraceableValidator" public="false">
+      <tag name="kernel.reset" method="reset"/>
+      <argument type="service" id="debug.validator.inner"/>
+    </service>
+    <service id="data_collector.validator" class="Symfony\Component\Validator\DataCollector\ValidatorDataCollector" public="false">
+      <tag name="data_collector" template="@WebProfiler/Collector/validator.html.twig" id="validator" priority="320"/>
+      <argument type="service" id="debug.validator"/>
+    </service>
     <service id=".cache_connection.GD_MSZC" class="Symfony\Component\Cache\Adapter\AbstractAdapter" public="false">
       <argument>redis://localhost</argument>
       <argument type="collection">
@@ -1148,6 +1382,9 @@
     </service>
     <service id="debug.file_link_formatter" class="Symfony\Component\HttpKernel\Debug\FileLinkFormatter" public="false">
       <argument>null</argument>
+      <argument type="service" id="request_stack" on-invalid="ignore"/>
+      <argument>/home/kimora/RAFTAF</argument>
+      <argument type="service" id="debug.file_link_formatter.url_format"/>
     </service>
     <service id="debug.stopwatch" class="Symfony\Component\Stopwatch\Stopwatch">
       <tag name="kernel.reset" method="reset"/>
@@ -1160,6 +1397,14 @@
       <argument type="service" id="debug.stopwatch"/>
       <argument type="service" id="logger" on-invalid="null"/>
       <argument type="service" id="request_stack" on-invalid="null"/>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service" id="data_collector.router"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
       <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
@@ -1401,6 +1646,46 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service" id="profiler_listener"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>-100</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service" id="profiler_listener"/>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.terminate</argument>
+        <argument type="collection">
+          <argument type="service" id="profiler_listener"/>
+          <argument>onKernelTerminate</argument>
+        </argument>
+        <argument>-1024</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service" id="data_collector.request"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service" id="data_collector.request"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
@@ -1591,6 +1876,14 @@
           <argument>onKernelControllerArguments</argument>
         </argument>
         <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service" id="web_profiler.debug_toolbar"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>-128</argument>
       </call>
     </service>
     <service id="debug.controller_resolver" class="Symfony\Component\HttpKernel\Controller\TraceableControllerResolver" public="false">
@@ -2023,6 +2316,9 @@
       <call method="addExtension">
         <argument type="service" id="doctrine.twig.doctrine_extension"/>
       </call>
+      <call method="addExtension">
+        <argument type="service" id="twig.extension.webprofiler"/>
+      </call>
       <call method="addGlobal">
         <argument>app</argument>
         <argument type="service" id="twig.app_variable"/>
@@ -2112,6 +2408,14 @@
       <call method="addPath">
         <argument>/home/kimora/RAFTAF/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views</argument>
         <argument>!ApiPlatform</argument>
+      </call>
+      <call method="addPath">
+        <argument>/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views</argument>
+        <argument>WebProfiler</argument>
+      </call>
+      <call method="addPath">
+        <argument>/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views</argument>
+        <argument>!WebProfiler</argument>
       </call>
       <call method="addPath">
         <argument>/home/kimora/RAFTAF/templates</argument>
@@ -2254,6 +2558,7 @@
     </service>
     <service id="security.authentication.manager" class="Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager" public="false">
       <argument type="iterator">
+        <argument type="service" id="security.authentication.provider.dao.main"/>
         <argument type="service" id="security.authentication.provider.anonymous.main"/>
       </argument>
       <argument>true</argument>
@@ -2273,17 +2578,11 @@
     </service>
     <service id="security.encoder_factory.generic" class="Symfony\Component\Security\Core\Encoder\EncoderFactory" public="false">
       <argument type="collection">
-        <argument key="App\Entity\Utilisateur" type="collection">
-          <argument key="algorithm">auto</argument>
-          <argument key="hash_algorithm">sha512</argument>
-          <argument key="key_length">40</argument>
-          <argument key="ignore_case">false</argument>
-          <argument key="encode_as_base64">true</argument>
-          <argument key="iterations">5000</argument>
-          <argument key="cost">null</argument>
-          <argument key="memory_cost">null</argument>
-          <argument key="time_cost">null</argument>
-          <argument key="threads">null</argument>
+        <argument key="Symfony\Component\Security\Core\User\User" type="collection">
+          <argument key="class">Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder</argument>
+          <argument key="arguments" type="collection">
+            <argument>12</argument>
+          </argument>
         </argument>
       </argument>
     </service>
@@ -2375,14 +2674,9 @@
       <argument type="service" id="security.token_storage"/>
       <argument type="service" id="security.encoder_factory.generic"/>
     </service>
-    <service id="cache.security_expression_language" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="cache.security_expression_language" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>KKp2r50M7T</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="cache.security_expression_language.recorder_inner"/>
     </service>
     <service id="security.authentication.listener.anonymous" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <tag name="monolog.logger" channel="security"/>
@@ -2405,12 +2699,20 @@
       <argument type="service" id="security.authentication.retry_entry_point"/>
       <argument type="service" id="logger" on-invalid="null"/>
     </service>
-    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap" public="false"/>
+    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap" public="false">
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.5dJADCx"/>
+        <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+    </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener" public="false">
       <tag name="monolog.logger" channel="security"/>
       <argument type="service" id="security.token_storage"/>
       <argument type="iterator">
-        <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+        <argument type="service" id="security.user.provider.concrete.in_memory"/>
       </argument>
       <argument></argument>
       <argument type="service" id="logger" on-invalid="null"/>
@@ -2715,11 +3017,15 @@
       <argument type="service" id="debug.event_dispatcher"/>
       <argument type="service" id="security.logout_url_generator"/>
     </service>
-    <service id="security.user.provider.concrete.app_user_provider" class="Symfony\Bridge\Doctrine\Security\User\EntityUserProvider" public="false">
-      <argument type="service" id="doctrine"/>
-      <argument>App\Entity\Utilisateur</argument>
-      <argument>telephone</argument>
-      <argument>null</argument>
+    <service id="security.user.provider.concrete.in_memory" class="Symfony\Component\Security\Core\User\InMemoryUserProvider" public="false">
+      <argument type="collection">
+        <argument key="admin" type="collection">
+          <argument key="password">kimorapapy</argument>
+          <argument key="roles" type="collection">
+            <argument>ROLE_ADMIN</argument>
+          </argument>
+        </argument>
+      </argument>
     </service>
     <service id="security.firewall.map.config.dev" class="Symfony\Bundle\SecurityBundle\Security\FirewallConfig" public="false">
       <argument>dev</argument>
@@ -2750,12 +3056,13 @@
       <argument>null</argument>
       <argument>true</argument>
       <argument>false</argument>
-      <argument>security.user.provider.concrete.app_user_provider</argument>
+      <argument>security.user.provider.concrete.in_memory</argument>
       <argument>main</argument>
-      <argument>null</argument>
+      <argument>security.authentication.basic_entry_point.main</argument>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="collection">
+        <argument>http_basic</argument>
         <argument>anonymous</argument>
       </argument>
       <argument>null</argument>
@@ -2763,12 +3070,32 @@
     <service id="security.context_listener.0" class="Symfony\Component\Security\Http\Firewall\ContextListener" public="false">
       <argument type="service" id="security.token_storage"/>
       <argument type="iterator">
-        <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+        <argument type="service" id="security.user.provider.concrete.in_memory"/>
       </argument>
       <argument>main</argument>
       <argument type="service" id="logger" on-invalid="null"/>
       <argument type="service" id="debug.event_dispatcher" on-invalid="null"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
+    </service>
+    <service id="security.authentication.provider.dao.main" class="Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider" public="false">
+      <argument type="service" id="security.user.provider.concrete.in_memory"/>
+      <argument type="service" id="security.user_checker"/>
+      <argument>main</argument>
+      <argument type="service" id="security.encoder_factory.generic"/>
+      <argument>true</argument>
+    </service>
+    <service id="security.authentication.basic_entry_point.main" class="Symfony\Component\Security\Http\EntryPoint\BasicAuthenticationEntryPoint" public="false">
+      <argument>Secured Area</argument>
+    </service>
+    <service id="security.authentication.listener.basic.main" class="Symfony\Component\Security\Http\Firewall\BasicAuthenticationListener" public="false">
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.authentication.manager"/>
+      <argument>main</argument>
+      <argument type="service" id="security.authentication.basic_entry_point.main"/>
+      <argument type="service" id="logger" on-invalid="null"/>
+      <call method="setSessionAuthenticationStrategy">
+        <argument type="service" id="security.authentication.session_strategy"/>
+      </call>
     </service>
     <service id="security.authentication.listener.anonymous.main" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -2784,7 +3111,7 @@
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
-      <argument>null</argument>
+      <argument type="service" id="security.authentication.basic_entry_point.main"/>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="service" id="logger" on-invalid="null"/>
@@ -2794,6 +3121,7 @@
       <argument type="iterator">
         <argument type="service" id="security.channel_listener"/>
         <argument type="service" id="security.context_listener.0"/>
+        <argument type="service" id="security.authentication.listener.basic.main"/>
         <argument type="service" id="security.authentication.listener.anonymous.main"/>
         <argument type="service" id="security.access_listener"/>
       </argument>
@@ -2808,11 +3136,14 @@
         <argument key="security.firewall.map.context.main" type="service" id="security.firewall.map.context.main"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.5dJADCx" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+      <argument>^/admin</argument>
+    </service>
     <service id="security.command.user_password_encoder" class="Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand" public="false">
       <tag name="console.command" command="security:encode-password"/>
       <argument type="service" id="security.encoder_factory.generic"/>
       <argument type="collection">
-        <argument>App\Entity\Utilisateur</argument>
+        <argument>Symfony\Component\Security\Core\User\User</argument>
       </argument>
       <call method="setName">
         <argument>security:encode-password</argument>
@@ -3392,32 +3723,17 @@
       <argument type="service" id="api_platform.cache.subresource_operation_factory"/>
       <argument type="service" id="api_platform.subresource_operation_factory.cached.inner"/>
     </service>
-    <service id="api_platform.cache.route_name_resolver" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="api_platform.cache.route_name_resolver" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>58nwzz0pDj</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="api_platform.cache.route_name_resolver.recorder_inner"/>
     </service>
-    <service id="api_platform.cache.identifiers_extractor" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="api_platform.cache.identifiers_extractor" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>TNwCrckx0n</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="api_platform.cache.identifiers_extractor.recorder_inner"/>
     </service>
-    <service id="api_platform.cache.subresource_operation_factory" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="api_platform.cache.subresource_operation_factory" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>+vI5uNdUGj</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="api_platform.cache.subresource_operation_factory.recorder_inner"/>
     </service>
     <service id="api_platform.cache_warmer.cache_pool_clearer" class="ApiPlatform\Core\Bridge\Symfony\Bundle\CacheWarmer\CachePoolClearerCacheWarmer" public="false">
       <tag name="kernel.cache_warmer" priority="64"/>
@@ -3500,23 +3816,13 @@
       <argument type="service" id="api_platform.cache.metadata.property"/>
       <argument type="service" id="api_platform.metadata.property.metadata_factory.validator"/>
     </service>
-    <service id="api_platform.cache.metadata.resource" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="api_platform.cache.metadata.resource" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>VGVva6EPOW</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="api_platform.cache.metadata.resource.recorder_inner"/>
     </service>
-    <service id="api_platform.cache.metadata.property" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+    <service id="api_platform.cache.metadata.property" class="Symfony\Component\Cache\Adapter\TraceableAdapter" public="false">
       <tag name="cache.pool"/>
-      <argument>DErjHW1HMR</argument>
-      <argument>0</argument>
-      <argument>%container.build_id%</argument>
-      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
-      <argument type="service" id="logger" on-invalid="ignore"/>
-      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+      <argument type="service" id="api_platform.cache.metadata.property.recorder_inner"/>
     </service>
     <service id="api_platform.metadata.extractor.xml" class="ApiPlatform\Core\Metadata\Extractor\XmlExtractor" public="false">
       <argument type="collection"/>
@@ -3846,11 +4152,11 @@
       <argument type="service" id="api_platform.metadata.resource.metadata_factory.cached"/>
     </service>
     <service id="api_platform.validator" class="ApiPlatform\Core\Bridge\Symfony\Validator\Validator">
-      <argument type="service" id="validator"/>
+      <argument type="service" id="debug.validator"/>
       <argument type="service" id="service_container"/>
     </service>
     <service id="api_platform.metadata.property.metadata_factory.validator" class="ApiPlatform\Core\Bridge\Symfony\Validator\Metadata\Property\ValidatorPropertyMetadataFactory" public="false">
-      <argument type="service" id="validator"/>
+      <argument type="service" id="debug.validator"/>
       <argument type="service" id="api_platform.metadata.property.metadata_factory.yaml"/>
     </service>
     <service id="api_platform.listener.view.validate" class="ApiPlatform\Core\Validator\EventListener\ValidateListener">
@@ -4127,7 +4433,7 @@
       <argument type="service" id="service_container"/>
       <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
       <argument type="service" id="request_stack"/>
-      <argument type="service" id="validator" on-invalid="null"/>
+      <argument type="service" id="debug.validator" on-invalid="null"/>
     </service>
     <service id="fos_rest.request.param_fetcher.reader" class="FOS\RestBundle\Request\ParamReader" public="false">
       <argument type="service" id="annotations.cached_reader"/>
@@ -4175,7 +4481,7 @@
       <tag name="console.command" command="server:run"/>
       <argument>/home/kimora/RAFTAF/public</argument>
       <argument>dev</argument>
-      <argument>/home/kimora/RAFTAF/var/cache</argument>
+      <argument>/home/kimora/RAFTAF</argument>
       <call method="setName">
         <argument>server:run</argument>
       </call>
@@ -4184,21 +4490,21 @@
       <tag name="console.command" command="server:start"/>
       <argument>/home/kimora/RAFTAF/public</argument>
       <argument>dev</argument>
-      <argument>/home/kimora/RAFTAF/var/cache</argument>
+      <argument>/home/kimora/RAFTAF</argument>
       <call method="setName">
         <argument>server:start</argument>
       </call>
     </service>
     <service id="web_server.command.server_stop" class="Symfony\Bundle\WebServerBundle\Command\ServerStopCommand" public="false">
       <tag name="console.command" command="server:stop"/>
-      <argument>/home/kimora/RAFTAF/var/cache</argument>
+      <argument>/home/kimora/RAFTAF</argument>
       <call method="setName">
         <argument>server:stop</argument>
       </call>
     </service>
     <service id="web_server.command.server_status" class="Symfony\Bundle\WebServerBundle\Command\ServerStatusCommand" public="false">
       <tag name="console.command" command="server:status"/>
-      <argument>/home/kimora/RAFTAF/var/cache</argument>
+      <argument>/home/kimora/RAFTAF</argument>
       <call method="setName">
         <argument>server:status</argument>
       </call>
@@ -4270,6 +4576,63 @@
     <service id="framework_extra_bundle.argument_name_convertor" class="Sensio\Bundle\FrameworkExtraBundle\Request\ArgumentNameConverter" public="false">
       <argument type="service" id="argument_metadata_factory"/>
     </service>
+    <service id=".2_HtmlDumper~TEl2x3N" class="Symfony\Component\VarDumper\Dumper\HtmlDumper" public="false">
+      <argument>null</argument>
+      <argument>UTF-8</argument>
+      <argument>1</argument>
+      <call method="setDisplayOptions">
+        <argument type="collection">
+          <argument key="maxStringLength">4096</argument>
+          <argument key="fileLinkFormat" type="service" id="debug.file_link_formatter"/>
+        </argument>
+      </call>
+    </service>
+    <service id=".1_NonceGenerator~TEl2x3N" class="Symfony\Bundle\WebProfilerBundle\Csp\NonceGenerator" public="false"/>
+    <service id="web_profiler.controller.profiler" class="Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController" public="true">
+      <argument type="service" id="router.default" on-invalid="null"/>
+      <argument type="service" id="profiler" on-invalid="null"/>
+      <argument type="service" id="twig"/>
+      <argument>%data_collector.templates%</argument>
+      <argument type="service" id="web_profiler.csp.handler"/>
+      <argument>/home/kimora/RAFTAF</argument>
+    </service>
+    <service id="web_profiler.controller.router" class="Symfony\Bundle\WebProfilerBundle\Controller\RouterController" public="true">
+      <argument type="service" id="profiler" on-invalid="null"/>
+      <argument type="service" id="twig"/>
+      <argument type="service" id="router.default" on-invalid="null"/>
+    </service>
+    <service id="web_profiler.controller.exception" class="Symfony\Bundle\WebProfilerBundle\Controller\ExceptionController" public="true">
+      <argument type="service" id="profiler" on-invalid="null"/>
+      <argument type="service" id="twig"/>
+      <argument>true</argument>
+      <argument type="service" id="debug.file_link_formatter"/>
+    </service>
+    <service id="web_profiler.csp.handler" class="Symfony\Bundle\WebProfilerBundle\Csp\ContentSecurityPolicyHandler" public="false">
+      <argument type="service" id=".1_NonceGenerator~TEl2x3N"/>
+    </service>
+    <service id="twig.extension.webprofiler" class="Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension" public="false">
+      <tag name="twig.extension"/>
+      <argument type="service" id=".2_HtmlDumper~TEl2x3N"/>
+    </service>
+    <service id="debug.file_link_formatter.url_format" class="string" public="false">
+      <argument type="service" id="router.default"/>
+      <argument>_profiler_open_file</argument>
+      <argument>?file=%%f&amp;line=%%l#line%%l</argument>
+      <factory class="Symfony\Component\HttpKernel\Debug\FileLinkFormatter" method="generateUrlFormat"/>
+    </service>
+    <service id="web_profiler.debug_toolbar" class="Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener" public="false">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="twig"/>
+      <argument>false</argument>
+      <argument>2</argument>
+      <argument type="service" id="router.default" on-invalid="ignore"/>
+      <argument>^/((index|app(_[\w]+)?)\.php/)?_wdt</argument>
+      <argument type="service" id="web_profiler.csp.handler"/>
+    </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecuriteController" class="App\Controller\SecuriteController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecuriteController" class="App\Controller\SecuriteController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SecuriteController" class="App\Controller\SecuriteController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\PartenaireRepository" class="App\Repository\PartenaireRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UtilisateurRepository" class="App\Repository\UtilisateurRepository" autowire="true" abstract="true"/>
@@ -4559,6 +4922,29 @@
         <argument key="security.token_storage" type="service" id="security.token_storage"/>
       </argument>
     </service>
+    <service id=".service_locator.CDOTD6." class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="doctrine" type="service" id="doctrine" on-invalid="ignore"/>
+        <argument key="form.factory" type="service" id="form.factory" on-invalid="ignore"/>
+        <argument key="http_kernel" type="service" id="http_kernel" on-invalid="ignore"/>
+        <argument key="parameter_bag" type="service" id="parameter_bag" on-invalid="ignore"/>
+        <argument key="request_stack" type="service" id="request_stack" on-invalid="ignore"/>
+        <argument key="router" type="service" id="router.default" on-invalid="ignore"/>
+        <argument key="security.authorization_checker" type="service" id="security.authorization_checker" on-invalid="ignore"/>
+        <argument key="security.csrf.token_manager" type="service" id="security.csrf.token_manager" on-invalid="ignore"/>
+        <argument key="security.token_storage" type="service" id="security.token_storage" on-invalid="ignore"/>
+        <argument key="serializer" type="service" id="serializer" on-invalid="ignore"/>
+        <argument key="session" type="service" id="session" on-invalid="ignore"/>
+        <argument key="twig" type="service" id="twig" on-invalid="ignore"/>
+      </argument>
+    </service>
+    <service id=".service_locator.CDOTD6..App\Controller\SecuriteController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\SecuriteController"/>
+      <argument>App\Controller\SecuriteController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.CDOTD6." method="withContext"/>
+    </service>
     <service id=".service_locator.MAfdX1A" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -4600,6 +4986,9 @@
       <argument>twig.template_cache_warmer</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.lSIKWsr" method="withContext"/>
+    </service>
+    <service id="debug.validator.inner" class="Symfony\Component\Validator\Validator\ValidatorInterface" public="false">
+      <factory service="validator.builder" method="getValidator"/>
     </service>
     <service id="debug.event_dispatcher.inner" class="Symfony\Component\EventDispatcher\EventDispatcher" public="false"/>
     <service id="debug.controller_resolver.inner" class="Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver" public="false">
@@ -4839,6 +5228,112 @@
         <argument key="web_server.command.server_stop" type="service" id="web_server.command.server_stop"/>
       </argument>
     </service>
+    <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="false">
+      <argument>IuHp1D8MOK</argument>
+      <argument>0</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
+      <call method="setLogger">
+        <argument type="service" id="logger" on-invalid="ignore"/>
+      </call>
+    </service>
+    <service id="cache.system.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>bQIS0kdOeD</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="cache.validator.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>Rf12DJb4xm</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="cache.serializer.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>b9vC5VBM64</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="cache.annotations.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>M5SAYQIQjf</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="cache.property_info.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>RJunBqHb31</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="cache.messenger.restart_workers_signal.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="false">
+      <argument>ptb45DC6EO</argument>
+      <argument>0</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
+      <call method="setLogger">
+        <argument type="service" id="logger" on-invalid="ignore"/>
+      </call>
+    </service>
+    <service id="cache.security_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>KKp2r50M7T</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="api_platform.cache.route_name_resolver.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>58nwzz0pDj</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="api_platform.cache.identifiers_extractor.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>TNwCrckx0n</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="api_platform.cache.subresource_operation_factory.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>+vI5uNdUGj</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="api_platform.cache.metadata.resource.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>VGVva6EPOW</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
+    <service id="api_platform.cache.metadata.property.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false">
+      <argument>DErjHW1HMR</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>/home/kimora/RAFTAF/var/cache/dev/pools</argument>
+      <argument type="service" id="logger" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
     <service id=".service_locator.uxa.tru" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -4882,8 +5377,8 @@
     <service id="form.property_accessor" alias="property_accessor" public="false"/>
     <service id="form.choice_list_factory" alias="form.choice_list_factory.cached" public="false"/>
     <service id="Symfony\Component\Asset\Packages" alias="assets.packages" public="false"/>
-    <service id="Symfony\Component\Validator\Validator\ValidatorInterface" alias="validator" public="false"/>
-    <service id="validator.mapping.class_metadata_factory" alias="validator" public="false"/>
+    <service id="Symfony\Component\Validator\Validator\ValidatorInterface" alias="debug.validator" public="false"/>
+    <service id="validator.mapping.class_metadata_factory" alias="debug.validator" public="false"/>
     <service id="cache.default_redis_provider" alias=".cache_connection.GD_MSZC" public="false"/>
     <service id="cache.default_memcached_provider" alias=".cache_connection.JKE6keX" public="false"/>
     <service id="cache.default_pdo_provider" alias="doctrine.dbal.default_connection" public="false"/>
@@ -4931,7 +5426,7 @@
     <service id="Symfony\Component\Security\Http\HttpUtils" alias="security.http_utils" public="false"/>
     <service id="Symfony\Component\Security\Guard\GuardAuthenticatorHandler" alias="security.authentication.guard_handler" public="false"/>
     <service id="security.firewall" alias="debug.security.firewall" public="false"/>
-    <service id="Symfony\Component\Security\Core\User\UserProviderInterface" alias="security.user.provider.concrete.app_user_provider"/>
+    <service id="Symfony\Component\Security\Core\User\UserProviderInterface" alias="security.user.provider.concrete.in_memory"/>
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker" public="false"/>
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker" public="false"/>
@@ -5009,6 +5504,7 @@
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>
     <service id=".service_locator.b1qho2Z" alias="api_platform.serializer_locator" public="false"/>
     <service id=".service_locator.YUq96kP" alias="api_platform.filter_locator" public="false"/>
+    <service id="validator" alias="debug.validator" public="true"/>
     <service id="api_platform.metadata.property.metadata_factory.property_info.inner" alias="api_platform.metadata.property.metadata_factory.xml" public="false"/>
     <service id="api_platform.metadata.property.metadata_factory.inherited.inner" alias="api_platform.metadata.property.metadata_factory.property_info" public="false"/>
     <service id="api_platform.metadata.resource.metadata_factory.annotation.inner" alias="api_platform.metadata.resource.metadata_factory.xml" public="false"/>
