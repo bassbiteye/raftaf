@@ -220,6 +220,6 @@ a.doc:hover {
     top: -7em;
     visibility: hidden;
 }
-", "@WebProfiler/Profiler/open.css.twig", "/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/open.css.twig");
+", "@WebProfiler/Profiler/open.css.twig", "/home/bass-codeur/sites/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/open.css.twig");
     }
 }

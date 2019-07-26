@@ -59,6 +59,6 @@ class __TwigTemplate_d43529594d91a3190ae36c9883dfcd8cc3cc0af2a5308400c32fe0ca326
 
     public function getSourceContext()
     {
-        return new Source("", "@Framework/Form/button_label.html.php", "/home/kimora/RAFTAF/vendor/symfony/framework-bundle/Resources/views/Form/button_label.html.php");
+        return new Source("", "@Framework/Form/button_label.html.php", "/home/bass-codeur/sites/RAFTAF/vendor/symfony/framework-bundle/Resources/views/Form/button_label.html.php");
     }
 }

@@ -56,14 +56,9 @@ class Utilisateur implements UserInterface
     private $etatUtilisateur;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Partenaire", mappedBy="createdBy")
+     * @ORM\ManyToOne(targetEntity="App\Entity\partenaire", inversedBy="partenaires")
      */
     private $partenaires;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\partenaire", inversedBy="utilisateurs")
-     */
-    private $partenaire;
 
     public function ____construct()
     {

@@ -174,6 +174,6 @@ class __TwigTemplate_327c4956b4cdb861418d555bc27e3a75586f72efd8a3ec7a00ff6b69dad
         {% endif %}
     </div>
 {% endblock %}
-", "@WebProfiler/Profiler/open.html.twig", "/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/open.html.twig");
+", "@WebProfiler/Profiler/open.html.twig", "/home/bass-codeur/sites/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/open.html.twig");
     }
 }

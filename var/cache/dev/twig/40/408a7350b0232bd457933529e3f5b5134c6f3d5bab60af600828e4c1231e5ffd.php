@@ -179,6 +179,6 @@ class __TwigTemplate_ea0729478d04c8adab8945fb9b37153ca89f82aecdc93f23997bc34f3c5
             {% block javascripts %}{% endblock %}
         </body>
     </html>
-", "base.html.twig", "/home/kimora/RAFTAF/templates/base.html.twig");
+", "base.html.twig", "/home/bass-codeur/sites/RAFTAF/templates/base.html.twig");
     }
 }

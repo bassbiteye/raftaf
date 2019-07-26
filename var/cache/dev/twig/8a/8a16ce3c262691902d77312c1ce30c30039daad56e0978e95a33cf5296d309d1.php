@@ -823,6 +823,6 @@ $context["answer"] === false)) {
         </div>
     {% endif %}
 {% endblock %}
-", "@ApiPlatform/DataCollector/request.html.twig", "/home/kimora/RAFTAF/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
+", "@ApiPlatform/DataCollector/request.html.twig", "/home/bass-codeur/sites/RAFTAF/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
     }
 }

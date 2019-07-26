@@ -155,6 +155,6 @@ class __TwigTemplate_81f93677d8461c73e1a94e3efccda2accad63dec4222e8265532f0ffac1
 {% block panel %}
     {{ render(path('_profiler_router', { token: token })) }}
 {% endblock %}
-", "@WebProfiler/Collector/router.html.twig", "/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Collector/router.html.twig");
+", "@WebProfiler/Collector/router.html.twig", "/home/bass-codeur/sites/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Collector/router.html.twig");
     }
 }

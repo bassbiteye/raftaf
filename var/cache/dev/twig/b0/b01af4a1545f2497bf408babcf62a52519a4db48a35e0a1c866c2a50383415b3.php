@@ -885,6 +885,6 @@ class SvgRenderer {
         return element;
     }
 }
-", "@WebProfiler/Collector/time.js", "/home/kimora/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Collector/time.js");
+", "@WebProfiler/Collector/time.js", "/home/bass-codeur/sites/RAFTAF/vendor/symfony/web-profiler-bundle/Resources/views/Collector/time.js");
     }
 }

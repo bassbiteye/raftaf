@@ -154,6 +154,6 @@ class __TwigTemplate_188ccade40043b382d65675df706bbd2f9a902f1adfa00f72dd3ff32a96
     </ul>
 </div>
 {% endblock %}
-", "securite/index.html.twig", "/home/kimora/RAFTAF/templates/securite/index.html.twig");
+", "securite/index.html.twig", "/home/bass-codeur/sites/RAFTAF/templates/securite/index.html.twig");
     }
 }

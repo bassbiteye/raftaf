@@ -44,14 +44,9 @@ class Partenaire
     private $adressePartenaire;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\utilisateur", inversedBy="partenaires")
+     * @ORM\ManyToOne(targetEntity="App\Entity\utilisateur", inversedBy="utilisateurs")
      */
     private $createdBy;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="partenaire")
-     */
-    private $utilisateurs;
 
     public function __construct()
     {

@@ -119,6 +119,6 @@ class __TwigTemplate_1eb9062c3531272aacf7360448bee82ffba2d55dab31c0a7e18092e7bce
 {% block body %}
 Bass et Kimora vous souhaite la bienvenue sur RAFTAF!
 {% endblock %}
-", "security/index.html.twig", "/home/kimora/RAFTAF/templates/security/index.html.twig");
+", "security/index.html.twig", "/home/bass-codeur/sites/RAFTAF/templates/security/index.html.twig");
     }
 }
