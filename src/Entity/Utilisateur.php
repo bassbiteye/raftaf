@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
  */
@@ -29,10 +30,6 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
-    public function  __construct()
-    {
-        $this->roles = array('ROLE_ADMIN');
-    }
 
     /**
      * @var string The hashed password

@@ -13,8 +13,9 @@ return [
         '/_profiler/search_bar' => [[['_route' => '_profiler_search_bar', '_controller' => 'web_profiler.controller.profiler::searchBarAction'], null, null, null, false, false, null]],
         '/_profiler/phpinfo' => [[['_route' => '_profiler_phpinfo', '_controller' => 'web_profiler.controller.profiler::phpinfoAction'], null, null, null, false, false, null]],
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
-        '/securite' => [[['_route' => 'securite', '_controller' => 'App\\Controller\\SecuriteController::index'], null, null, null, false, false, null]],
-        '/admin' => [[['_route' => 'app_securite_admin', '_controller' => 'App\\Controller\\SecuriteController::admin'], null, null, null, false, false, null]],
+        '/api/securite' => [[['_route' => 'securite', '_controller' => 'App\\Controller\\SecuriteController::index'], null, null, null, false, false, null]],
+        '/api/register' => [[['_route' => 'register', '_controller' => 'App\\Controller\\SecuriteController::register'], null, null, null, false, false, null]],
+        '/api/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\SecuriteController::login'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
