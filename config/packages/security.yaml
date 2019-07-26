@@ -1,34 +1,39 @@
  # config/packages/security.yaml
 security:
     encoders :
-        Symfony\Component\Security\Core\User\User : 
-            algorithm : bcrypt
-            cost : 12
+        App\Entity\User:
+            algorithm: argon2i
+      # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory : 
-            memory :
-                users :
-                    admin :
-                        password : kimorapapy
-                        roles : 'ROLE_ADMIN'
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: telephone
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous : ~ 
-            http_basic : ~
+            anonymous: true
+
 
             # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control :
         # require ROLE_ADMIN for /admin*
-        - { path : ^/admin , roles : ROLE_ADMIN }
+        #- { path : ^/admin , roles : ROLE_ADMIN }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
